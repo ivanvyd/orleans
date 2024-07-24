@@ -283,7 +283,7 @@ namespace Orleans.Runtime
             }
 
             // Initialize the new activation asynchronously.
-            using var cancellation = new CancellationTokenSource(collectionOptions.Value.ActivationTimeout);
+            var cancellation = new CancellationTokenSource(collectionOptions.Value.ActivationTimeout);
             result.Activate(requestContextData, cancellation.Token);
             return result;
 
@@ -364,7 +364,7 @@ namespace Orleans.Runtime
 
             if (logger.IsEnabled(LogLevel.Debug)) logger.LogDebug("DeactivateActivations: {Count} activations.", list.Count);
 
-            using var timeoutTokenSource = new CancellationTokenSource(this.collectionOptions.Value.DeactivationTimeout);
+            var timeoutTokenSource = new CancellationTokenSource(this.collectionOptions.Value.DeactivationTimeout);
             foreach (var activation in list)
             {
                 activation.DeactivateAsync(reason, timeoutTokenSource.Token);
