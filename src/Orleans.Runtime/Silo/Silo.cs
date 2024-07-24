@@ -379,7 +379,7 @@ namespace Orleans.Runtime
         /// </summary>
         public void Shutdown()
         {
-            var cancellationSource = new CancellationTokenSource(this.stopTimeout);
+            using var cancellationSource = new CancellationTokenSource(this.stopTimeout);
             StopAsync(cancellationSource.Token).GetAwaiter().GetResult();
         }
 

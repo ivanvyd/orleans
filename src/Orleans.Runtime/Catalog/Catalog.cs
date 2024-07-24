@@ -283,7 +283,7 @@ namespace Orleans.Runtime
             }
 
             // Initialize the new activation asynchronously.
-            var cancellation = new CancellationTokenSource(collectionOptions.Value.ActivationTimeout);
+            using var cancellation = new CancellationTokenSource(collectionOptions.Value.ActivationTimeout);
             result.Activate(requestContextData, cancellation.Token);
             return result;
 
@@ -354,7 +354,7 @@ namespace Orleans.Runtime
 
             if (logger.IsEnabled(LogLevel.Debug)) logger.LogDebug("DeactivateActivations: {Count} activations.", list.Count);
 
-            var timeoutTokenSource = new CancellationTokenSource(this.collectionOptions.Value.DeactivationTimeout);
+            using var timeoutTokenSource = new CancellationTokenSource(this.collectionOptions.Value.DeactivationTimeout);
             await Task.WhenAll(list.Select(activation => activation.DeactivateAsync(reason, timeoutTokenSource.Token)));
         }
 
@@ -364,7 +364,7 @@ namespace Orleans.Runtime
 
             if (logger.IsEnabled(LogLevel.Debug)) logger.LogDebug("DeactivateActivations: {Count} activations.", list.Count);
 
-            var timeoutTokenSource = new CancellationTokenSource(this.collectionOptions.Value.DeactivationTimeout);
+            using var timeoutTokenSource = new CancellationTokenSource(this.collectionOptions.Value.DeactivationTimeout);
             foreach (var activation in list)
             {
                 activation.DeactivateAsync(reason, timeoutTokenSource.Token);
@@ -403,7 +403,7 @@ namespace Orleans.Runtime
 
         public Task DeleteActivations(List<GrainAddress> addresses, DeactivationReasonCode reasonCode, string reasonText)
         {
-            var timeoutTokenSource = new CancellationTokenSource(this.collectionOptions.Value.DeactivationTimeout);
+            using var timeoutTokenSource = new CancellationTokenSource(this.collectionOptions.Value.DeactivationTimeout);
             var tasks = new List<Task>(addresses.Count);
             var deactivationReason = new DeactivationReason(reasonCode, reasonText);
             foreach (var activationAddress in addresses)
